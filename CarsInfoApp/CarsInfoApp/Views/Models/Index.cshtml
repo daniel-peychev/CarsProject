@@ -1,0 +1,103 @@
+﻿@model IEnumerable<CarsInfoApp.Models.Model>
+
+@{
+    ViewData["Title"] = "Index";
+    var token = Context.Request.Cookies["token"];
+    var adminCookie = Context.Request.Cookies["admin"];
+}
+
+<h3>List of available models</h3>
+@{
+    bool isAdminUser = adminCookie != null || !String.IsNullOrEmpty(adminCookie);
+    if (isAdminUser)
+    {
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+    }
+}
+
+@using (Html.BeginForm())
+{
+    if (token != null || !String.IsNullOrEmpty(token))
+    {
+        <p>
+            Find by name: @Html.TextBox("SearchString")
+            <input type="submit" value="Search" />
+        </p>
+    }
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                @{
+                    bool isValidToken = token != null || !String.IsNullOrEmpty(token);
+                    if (isValidToken)
+                    {
+                        @Html.ActionLink(@Html.DisplayNameFor(model => model.ModelName), "Index", new { sortOrder = ViewBag.NameSortParm })
+                    }
+                    else
+                    {
+                        @Html.DisplayNameFor(model => model.ModelName)
+                    }
+                }
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th scope="col">
+                @{
+                    if (isValidToken)
+                    {
+                        @Html.ActionLink(@Html.DisplayNameFor(model => model.Make), "Index", new { sortOrder = ViewBag.ManufacturerSortParm })
+                    }
+                    else
+                    {
+                        @Html.DisplayNameFor(model => model.Make)
+                    }
+                }
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModelName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartYear)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndYear)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Make.Name)
+                </td>
+                <td>
+                    @{
+                        if (isAdminUser)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        }
+                    }
+                    <a asp-controller="Engines" asp-action="Index" asp-route-id="@item.Id">Engines</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

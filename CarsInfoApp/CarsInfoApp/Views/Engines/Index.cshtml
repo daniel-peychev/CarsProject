@@ -1,0 +1,106 @@
+﻿@model IEnumerable<CarsInfoApp.Models.Engine>
+
+@{
+    ViewData["Title"] = "Index";
+    var token = Context.Request.Cookies["token"];
+    var adminCookie = Context.Request.Cookies["admin"];
+}
+
+@{
+    bool isAdminUser = adminCookie != null || !String.IsNullOrEmpty(adminCookie);
+    if (isAdminUser)
+    {
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+    }
+}
+@using (Html.BeginForm())
+{
+    if (token != null || !String.IsNullOrEmpty(token))
+    {
+        <p>
+            Find by name: @Html.TextBox("SearchString")
+            <input type="submit" value="Search" />
+        </p>
+    }
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @{
+                    bool isValidToken = token != null || !String.IsNullOrEmpty(token);
+                    if (isValidToken)
+                    {
+                        @Html.ActionLink(@Html.DisplayNameFor(model => model.EngineCode), "Index", new { sortOrder = ViewBag.EngineCodeSortParm })
+                    }
+                    else
+                    {
+                        @Html.DisplayNameFor(model => model.EngineCode)
+                    }
+                }
+            </th>
+            <th>
+                @{
+                    if (isValidToken)
+                    {
+                        @Html.ActionLink(@Html.DisplayNameFor(model => model.HorsePower), "Index", new { sortOrder = ViewBag.HpSortParm })
+                    }
+                    else
+                    {
+                        @Html.DisplayNameFor(model => model.HorsePower)
+                    }
+                }
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Torque)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fuel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasTurbo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EngineCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HorsePower)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Torque)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fuel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HasTurbo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.ModelName)
+                </td>
+                @{
+                    if (isAdminUser)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>

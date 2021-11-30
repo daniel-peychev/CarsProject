@@ -1,0 +1,53 @@
+﻿@model CarsInfoApp.Models.Engine
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>Engine Details</h3>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EngineCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EngineCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HorsePower)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HorsePower)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Torque)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Torque)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Fuel)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Fuel)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HasTurbo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HasTurbo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Model.ModelName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index" asp-route-id="@Model.ModelId">Back to List</a>
+</div>

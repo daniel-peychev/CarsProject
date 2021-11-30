@@ -1,0 +1,95 @@
+﻿@model IEnumerable<CarsInfoApp.Models.Make>
+
+@{
+    ViewData["Title"] = "Index";
+    var token = Context.Request.Cookies["token"];
+    var adminCookie = Context.Request.Cookies["admin"];
+}
+
+<h3>List of available manufacturers</h3>
+
+@{
+    bool isAdminUser = adminCookie != null || !String.IsNullOrEmpty(adminCookie);
+    if (isAdminUser)
+    {
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+    }
+}
+@using (Html.BeginForm())
+{
+    if (token != null || !String.IsNullOrEmpty(token))
+    {
+        <p>
+            Find by name: @Html.TextBox("SearchString")
+            <input type="submit" value="Search" />
+        </p>
+    }
+}
+
+<p>@ViewBag.Pesho</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                @{
+                    bool isValidToken = token != null || !String.IsNullOrEmpty(token);
+                    if (isValidToken)
+                    {
+                        @Html.ActionLink(@Html.DisplayNameFor(model => model.Name), "Index", new { sortOrder = ViewBag.NameSortParm })
+                    }
+                    else
+                    {
+                        @Html.DisplayNameFor(model => model.Name)
+                    }
+                }
+            </th>
+            <th scope="col">
+                @{
+                    if (isValidToken)
+                    {
+                        @Html.ActionLink(@Html.DisplayNameFor(model => model.EstablishmentDate), "Index", new { sortOrder = ViewBag.DateSortParm })
+                    }
+                    else
+                    {
+                        @Html.DisplayNameFor(model => model.EstablishmentDate)
+                    }
+                }
+            </th>
+            <th scope="col">@Html.DisplayNameFor(model => model.TotalCarsMade)</th>
+            <th scope="col">@Html.DisplayNameFor(model => model.TotalIncome)</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstablishmentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalCarsMade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalIncome)
+                </td>
+                @{
+                    if (isAdminUser)
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
